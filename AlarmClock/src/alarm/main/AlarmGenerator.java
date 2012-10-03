@@ -25,6 +25,7 @@ public class AlarmGenerator extends BroadcastReceiver
 {
 	Context activityContext_;
     
+	//Test
 	//Default Constructor, called by Alarm-Manager
 	public AlarmGenerator()
 	{
