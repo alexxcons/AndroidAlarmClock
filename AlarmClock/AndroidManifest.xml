@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="alarm.main"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="7" />
+	<uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
+	<uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+	
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
+         
+        
+        <activity
+            android:name=".AlarmClockActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SliderActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".globalsettings.GlobalSettingsActivity"
+            android:label="@string/default_settings" >
+        </activity>
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/default_settings" >
+        </activity>
+        <service android:name=".AlarmService"></service>
+        <receiver android:process=":acknowledge_process"  android:name=".AlarmGenerator"/>
+    </application>
+</manifest>
