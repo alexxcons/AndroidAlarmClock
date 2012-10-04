@@ -33,7 +33,6 @@
             android:name=".TestActivity"
             android:label="@string/default_settings" >
         </activity>
-        <service android:name=".AlarmService"></service>
         <receiver android:process=":acknowledge_process"  android:name=".AlarmGenerator"/>
     </application>
 </manifest>

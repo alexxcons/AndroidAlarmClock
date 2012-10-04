@@ -29,24 +29,6 @@ import alarm.main.AcknowledgeManager;
 
 public class AlarmClockActivity extends Activity
 {
-	
-	Messenger alarmServiceMessenger_ = null;
-	boolean mIsBound;
-	final Messenger mMessenger = new Messenger(new IncomingHandler());
-	
-	class IncomingHandler extends Handler
-	{
-		public void handleMessage(Message msg)
-		{
-			switch (msg.what)
-			{
-				case AlarmService.MSG_SET_INT_VALUE:
-					break;
-				default:
-					super.handleMessage(msg);
-			}
-		}
-	}
 	 
     /** Called when the activity is first created. */
     @Override
@@ -56,12 +38,6 @@ public class AlarmClockActivity extends Activity
     	//requestWindowFeature(Window.FEATURE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-    	
-        if (AlarmService.isRunning())
-        {
-        	bindService(new Intent(this, AlarmService.class), alarmServiceConnection_, Context.BIND_AUTO_CREATE);
-        	mIsBound = true;
-        }
         
         Date now_ = new Date();
         alarmEnableButton_ = (ToggleButton)findViewById(R.id.AlarmEnable);
@@ -96,7 +72,7 @@ public class AlarmClockActivity extends Activity
 	        			  input.setDate(input.getDate()+1);
 	        		  }
 	        			
-	        		  alarmControler_.SetAlarm(v.getContext(),now);
+	        		  alarmGenerator_.SetAlarm(v.getContext(),now,incomingAlarmHandler_);
 	        		  
 	        		  String text = "Alarm set to:" + input.getHours() + ":" + input.getMinutes();
 	        		  //Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
@@ -111,7 +87,9 @@ public class AlarmClockActivity extends Activity
 	        });
         
         acknowledgeManager_ = new AcknowledgeManager(slider_);
-        alarmControler_ = new AlarmGenerator();
+       // callbackIncomingAlarm_ = new Messenger(new AlarmHandler());
+        //incomingAlarmHandler_ = new AlarmHandler();
+        alarmGenerator_ = new AlarmGenerator();
 
         //Neues Fenster Öffnen:
         //Intent myIntent = new Intent(AlarmClockActivity.this, SliderActivity.class);
@@ -148,35 +126,40 @@ public class AlarmClockActivity extends Activity
 		return super.onKeyDown(keycode,event);
 	}
 	
-	private ServiceConnection alarmServiceConnection_ = new ServiceConnection()
+	static public void SendAlarm(Context context)
 	{
-		public void onServiceConnected(ComponentName className, IBinder service)
-		{
-			alarmServiceMessenger_ = new Messenger(service);
-			try
-			{
-				Message msg = Message.obtain(null, AlarmService.REGISTER_ALARM_ACTIVITY);
-				msg.replyTo = mMessenger;
-				alarmServiceMessenger_.send(msg);
-			}
-			catch (RemoteException e)
-			{
-					// In this case the service has crashed before we could even do anything with it
-			}
-		}
+		//Toast.makeText(context, "Static",Toast.LENGTH_LONG).show();
 
-		public void onServiceDisconnected(ComponentName name)
-		{
-			alarmServiceMessenger_ = null;
-		}
-	};
+		Message msg = Message.obtain(null, AlarmClockActivity.MSG_TRIGGER_ALARM);
+		incomingAlarmHandler_.sendMessage(msg);
+	}
+	
+	static final int MSG_TRIGGER_ALARM = 1;
 		
-	private AlarmGenerator alarmControler_;
+	private AlarmGenerator alarmGenerator_;
 	private AcknowledgeManager acknowledgeManager_;
     private ToggleButton alarmEnableButton_;
     private NumberPicker alarmHourButton_;
     private NumberPicker alarmMinuteButton_;
     private HorizontalSlider slider_;
+    
+    //private Messenger callbackIncomingAlarm_;
+    static private Handler incomingAlarmHandler_ = new Handler()
+	{
+		public void handleMessage(Message msg)
+		{
+			switch (msg.what)
+			{
+				case MSG_TRIGGER_ALARM:
+			        //Intent myIntent = new Intent(AlarmClockActivity.this, SliderActivity.class);
+					//AlarmClockActivity.this.startActivity(myIntent);
+					//Toast.makeText(AlarmClockActivity.this, "DebugX1",Toast.LENGTH_LONG).show();
+					break;
+				default:
+					super.handleMessage(msg);
+			}
+		}
+	};
 
 //	final String text = Integer.toString(int_value);
     
