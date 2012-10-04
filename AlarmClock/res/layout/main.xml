@@ -46,10 +46,4 @@
             android:text="-" />
     </LinearLayout>
 
-    <alarm.main.HorizontalSlider
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="131dp" />
-
 </LinearLayout>

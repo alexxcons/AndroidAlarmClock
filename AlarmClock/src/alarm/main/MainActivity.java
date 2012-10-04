@@ -6,36 +6,23 @@ import java.util.Date;
 import android.view.KeyEvent;
 import android.view.View.OnClickListener;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.view.View;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
 
-import alarm.main.HorizontalSlider.OnProgressChangeListener;
 import alarm.main.numberpicker.NumberPicker;
 import alarm.main.AlarmGenerator;
-import alarm.main.AcknowledgeManager;
 
-public class AlarmClockActivity extends Activity
+public class MainActivity extends Activity
 {
-	 
     /** Called when the activity is first created. */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-    	//needed for slider?
-    	//requestWindowFeature(Window.FEATURE_PROGRESS);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
@@ -43,16 +30,12 @@ public class AlarmClockActivity extends Activity
         alarmEnableButton_ = (ToggleButton)findViewById(R.id.AlarmEnable);
         alarmHourButton_ = (NumberPicker)findViewById(R.id.Hour);
         alarmMinuteButton_ = (NumberPicker)findViewById(R.id.Minute);
-        slider_ = (HorizontalSlider)findViewById(R.id.progressBar);
         
         alarmHourButton_.setRange(0,23);
         alarmHourButton_.setCurrent(now_.getHours());
 
         alarmMinuteButton_.setRange(0,59);
         alarmMinuteButton_.setCurrent(now_.getMinutes());
-        
-        slider_.setOnProgressChangeListener(changeListener);
-        slider_.setVisibility(View.GONE);
         
         alarmEnableButton_.setOnClickListener(new OnClickListener(){
 	          public void onClick(View v)
@@ -72,44 +55,29 @@ public class AlarmClockActivity extends Activity
 	        			  input.setDate(input.getDate()+1);
 	        		  }
 	        			
-	        		  alarmGenerator_.SetAlarm(v.getContext(),now,incomingAlarmHandler_);
+	        		  alarmGenerator_.SetAlarm(v.getContext(),input);
+	        		  
+	        		  //for debugging
+	        		  //alarmGenerator_.SetAlarm(v.getContext(),now);
 	        		  
 	        		  String text = "Alarm set to:" + input.getHours() + ":" + input.getMinutes();
-	        		  //Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
+	        		  Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
 	        	  }
 	          }
 	          
 	          public void showSlider()
 	          {
-	      		Intent myIntent = new Intent(getApplicationContext(), SliderActivity.class);
+	      		Intent myIntent = new Intent(getApplicationContext(), AcknowledgeActivity.class);
 	      		startActivity(myIntent);   	  
 	          }
 	        });
         
-        acknowledgeManager_ = new AcknowledgeManager(slider_);
-       // callbackIncomingAlarm_ = new Messenger(new AlarmHandler());
-        //incomingAlarmHandler_ = new AlarmHandler();
         alarmGenerator_ = new AlarmGenerator();
 
         //Neues Fenster Öffnen:
-        //Intent myIntent = new Intent(AlarmClockActivity.this, SliderActivity.class);
-		//AlarmClockActivity.this.startActivity(myIntent);
         //Intent myIntent = new Intent(AlarmClockActivity.this, ListSample.class);
         //AlarmClockActivity.this.startActivity(myIntent);
-        
     }
-    	
-    //This aknowledges an alarm
-    private OnProgressChangeListener changeListener = new OnProgressChangeListener()
-    {
-    	public void onProgressChanged(View v, int progress)
-    	{
-    		if (progress > 80 )
-    		{
-    			acknowledgeManager_.acknowledgeAlarm();
-    		}
-    	}
-	};
 	
 	//Handle the menu-button, if there is any
 	@Override
@@ -120,50 +88,15 @@ public class AlarmClockActivity extends Activity
 	        //Intent myIntent = new Intent(AlarmClockActivity.this, GlobalSettingsActivity.class);
 	        //AlarmClockActivity.this.startActivity(myIntent);
 	        
-	        Intent myIntent = new Intent(AlarmClockActivity.this, TestActivity.class);
-	        AlarmClockActivity.this.startActivity(myIntent);
+	        Intent myIntent = new Intent(MainActivity.this, TestActivity.class);
+	        MainActivity.this.startActivity(myIntent);
 		}
 		return super.onKeyDown(keycode,event);
 	}
 	
-	static public void SendAlarm(Context context)
-	{
-		//Toast.makeText(context, "Static",Toast.LENGTH_LONG).show();
-
-		Message msg = Message.obtain(null, AlarmClockActivity.MSG_TRIGGER_ALARM);
-		incomingAlarmHandler_.sendMessage(msg);
-	}
-	
-	static final int MSG_TRIGGER_ALARM = 1;
-		
 	private AlarmGenerator alarmGenerator_;
-	private AcknowledgeManager acknowledgeManager_;
     private ToggleButton alarmEnableButton_;
     private NumberPicker alarmHourButton_;
     private NumberPicker alarmMinuteButton_;
-    private HorizontalSlider slider_;
-    
-    //private Messenger callbackIncomingAlarm_;
-    static private Handler incomingAlarmHandler_ = new Handler()
-	{
-		public void handleMessage(Message msg)
-		{
-			switch (msg.what)
-			{
-				case MSG_TRIGGER_ALARM:
-			        //Intent myIntent = new Intent(AlarmClockActivity.this, SliderActivity.class);
-					//AlarmClockActivity.this.startActivity(myIntent);
-					//Toast.makeText(AlarmClockActivity.this, "DebugX1",Toast.LENGTH_LONG).show();
-					break;
-				default:
-					super.handleMessage(msg);
-			}
-		}
-	};
-
-//	final String text = Integer.toString(int_value);
-    
-//This ends the application
-//finish();
     
 }
