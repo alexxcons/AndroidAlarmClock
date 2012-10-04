@@ -6,30 +6,36 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 
-public class HorizontalSlider extends ProgressBar {
+public class HorizontalSlider extends ProgressBar
+{
 
 	private OnProgressChangeListener listener;
 	private static int padding = 2;
 
-	public interface OnProgressChangeListener {
+	public interface OnProgressChangeListener
+	{
 		void onProgressChanged(View v, int progress);
-		}
+	}
 
-	public HorizontalSlider(Context context, AttributeSet attrs, int defStyle) {
+	public HorizontalSlider(Context context, AttributeSet attrs, int defStyle)
+	{
 		super(context, attrs, defStyle);
-		}
+	}
 
-	public HorizontalSlider(Context context, AttributeSet attrs) {
+	public HorizontalSlider(Context context, AttributeSet attrs)
+	{
 		super(context, attrs, android.R.attr.progressBarStyleHorizontal);
-		}
+	}
 
-	public HorizontalSlider(Context context) {
+	public HorizontalSlider(Context context)
+	{
 		super(context);
-		}
+	}
 
-	public void setOnProgressChangeListener(OnProgressChangeListener l) {
+	public void setOnProgressChangeListener(OnProgressChangeListener l)
+	{
 		listener = l;
-		}
+	}
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event)

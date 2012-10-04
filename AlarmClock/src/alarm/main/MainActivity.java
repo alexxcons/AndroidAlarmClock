@@ -37,47 +37,48 @@ public class MainActivity extends Activity
         alarmMinuteButton_.setRange(0,59);
         alarmMinuteButton_.setCurrent(now_.getMinutes());
         
-        alarmEnableButton_.setOnClickListener(new OnClickListener(){
-	          public void onClick(View v)
-	          {
-	        	  if(alarmEnableButton_.isChecked())
-	        	  {
-	        		  Date input = new Date();
-	        		  input.setHours(alarmHourButton_.getCurrent());
-	        		  input.setMinutes(alarmMinuteButton_.getCurrent());
-	        		  input.setSeconds(0);
-	        		  
-	        		  Date now = new Date();
-	        		  now.setSeconds(0);
-	        		  
-	        		  if ( input.before(now) )
-	        		  {
-	        			  input.setDate(input.getDate()+1);
-	        		  }
-	        			
-	        		  alarmGenerator_.SetAlarm(v.getContext(),input);
-	        		  
-	        		  //for debugging
-	        		  //alarmGenerator_.SetAlarm(v.getContext(),now);
-	        		  
-	        		  String text = "Alarm set to:" + input.getHours() + ":" + input.getMinutes();
-	        		  Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
-	        	  }
-	          }
-	          
-	          public void showSlider()
-	          {
-	      		Intent myIntent = new Intent(getApplicationContext(), AcknowledgeActivity.class);
-	      		startActivity(myIntent);   	  
-	          }
-	        });
-        
+        alarmEnableButton_.setOnClickListener(new MyOnClickListener());        
         alarmGenerator_ = new AlarmGenerator();
 
         //Neues Fenster Öffnen:
         //Intent myIntent = new Intent(AlarmClockActivity.this, ListSample.class);
         //AlarmClockActivity.this.startActivity(myIntent);
     }
+    
+    class MyOnClickListener implements OnClickListener
+    {
+    	public void onClick(View v)
+        {
+    		if(alarmEnableButton_.isChecked())
+    		{
+    			Date input = new Date();
+    			input.setHours(alarmHourButton_.getCurrent());
+    			input.setMinutes(alarmMinuteButton_.getCurrent());
+    			input.setSeconds(0);
+      		  
+    			Date now = new Date();
+    			now.setSeconds(0);
+      		  	if ( input.before(now) )
+      		  	{
+      		  		input.setDate(input.getDate()+1);
+      		  	}
+	
+      		  	alarmGenerator_.SetAlarm(v.getContext(),input);
+  
+      		  	//for debugging
+      		  	//alarmGenerator_.SetAlarm(v.getContext(),now);
+  
+      		  	String text = "Alarm set to:" + input.getHours() + ":" + input.getMinutes();
+      		  	Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
+    		}
+        }
+      	  
+    	public void showSlider()
+    	{
+    		Intent myIntent = new Intent(getApplicationContext(), AcknowledgeActivity.class);
+    		startActivity(myIntent);   	  
+    	}
+    };
 	
 	//Handle the menu-button, if there is any
 	@Override
