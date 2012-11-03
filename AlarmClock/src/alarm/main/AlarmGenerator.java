@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 public class AlarmGenerator extends BroadcastReceiver 
 {
@@ -26,19 +27,26 @@ public class AlarmGenerator extends BroadcastReceiver
 		context.startActivity(i);
 	}
 
-	public void SetAlarm(Context context,Date alarmDate)
+	public void setAlarm(Context context,Date alarmDate)
 	{
 		AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-		Intent i = new Intent(context, AlarmGenerator.class);
-		PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+		Intent intent = new Intent(context, AlarmGenerator.class);
+
+		String data = alarmDate.getHours() + ":" + alarmDate.getMinutes();
+		Uri uri = Uri.parse(data);
+		intent.setData(uri);
+		PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 		
 		am.set(AlarmManager.RTC_WAKEUP, alarmDate.getTime(),pi);
 		//am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 10, pi); // Millisec * Second * Minute
 	}
 
-	public void CancelAlarm(Context context)
+	public void cancelAlarm(Context context,Date alarmDate)
 	{
 		Intent intent = new Intent(context, AlarmGenerator.class);
+		String data = alarmDate.getHours() + ":" + alarmDate.getMinutes();
+		Uri uri = Uri.parse(data);
+		intent.setData(uri);
 		PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
 		AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(sender);

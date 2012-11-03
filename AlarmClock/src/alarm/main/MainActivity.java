@@ -26,18 +26,19 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        Date now_ = new Date();
+        Date now = new Date();
+        alarmTime_ = new Date();
         alarmEnableButton_ = (ToggleButton)findViewById(R.id.AlarmEnable);
         alarmHourButton_ = (NumberPicker)findViewById(R.id.Hour);
         alarmMinuteButton_ = (NumberPicker)findViewById(R.id.Minute);
         
         alarmHourButton_.setRange(0,23);
-        alarmHourButton_.setCurrent(now_.getHours());
+        alarmHourButton_.setCurrent(now.getHours());
 
         alarmMinuteButton_.setRange(0,59);
-        alarmMinuteButton_.setCurrent(now_.getMinutes());
+        alarmMinuteButton_.setCurrent(now.getMinutes());
         
-        alarmEnableButton_.setOnClickListener(new MyOnClickListener());        
+        alarmEnableButton_.setOnClickListener(new AlarmEnableListener());        
         alarmGenerator_ = new AlarmGenerator();
 
         //Neues Fenster Öffnen:
@@ -45,39 +46,39 @@ public class MainActivity extends Activity
         //AlarmClockActivity.this.startActivity(myIntent);
     }
     
-    class MyOnClickListener implements OnClickListener
+    class AlarmEnableListener implements OnClickListener
     {
     	public void onClick(View v)
         {
     		if(alarmEnableButton_.isChecked())
     		{
-    			Date input = new Date();
-    			input.setHours(alarmHourButton_.getCurrent());
-    			input.setMinutes(alarmMinuteButton_.getCurrent());
-    			input.setSeconds(0);
+    			alarmTime_.setHours(alarmHourButton_.getCurrent());
+    			alarmTime_.setMinutes(alarmMinuteButton_.getCurrent());
+    			alarmTime_.setSeconds(0);
       		  
     			Date now = new Date();
     			now.setSeconds(0);
-      		  	if ( input.before(now) )
+      		  	if ( alarmTime_.before(now) )
       		  	{
-      		  		input.setDate(input.getDate()+1);
+      		  		//set for next day, if it is in the past
+      		  		alarmTime_.setDate(alarmTime_.getDate()+1);
       		  	}
-	
-      		  	alarmGenerator_.SetAlarm(v.getContext(),input);
-  
+      		  	
       		  	//for debugging
-      		  	//alarmGenerator_.SetAlarm(v.getContext(),now);
+      		  	//alarmTime_ = now;
+      		  	
+      		  	alarmGenerator_.setAlarm(v.getContext(),alarmTime_);
   
-      		  	String text = "Alarm set to:" + input.getHours() + ":" + input.getMinutes();
+      		  	String text = "Alarm set to:" + alarmTime_.getHours() + ":" + alarmTime_.getMinutes();
+      		  	Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
+    		}
+    		else
+    		{
+      		  	alarmGenerator_.cancelAlarm(v.getContext(),alarmTime_);
+      		  	String text = "Alarm:" + alarmTime_.getHours() + ":" + alarmTime_.getMinutes() + " cancelled.";
       		  	Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
     		}
         }
-      	  
-    	public void showSlider()
-    	{
-    		Intent myIntent = new Intent(getApplicationContext(), AcknowledgeActivity.class);
-    		startActivity(myIntent);   	  
-    	}
     };
 	
 	//Handle the menu-button, if there is any
@@ -99,5 +100,7 @@ public class MainActivity extends Activity
     private ToggleButton alarmEnableButton_;
     private NumberPicker alarmHourButton_;
     private NumberPicker alarmMinuteButton_;
+    
+    Date alarmTime_;
     
 }
