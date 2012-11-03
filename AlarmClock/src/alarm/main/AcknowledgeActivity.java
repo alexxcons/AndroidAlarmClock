@@ -38,6 +38,8 @@ public class AcknowledgeActivity extends Activity
 		wakelock_ = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AlarmLock");
 		wakelock_.acquire();
 		
+		vibrateFinished_ = false;
+		soundFinished_ = false;
         vibrateThread_.start();
         musicPlayerThread_.start();
     }
@@ -57,6 +59,13 @@ public class AcknowledgeActivity extends Activity
     		{
     			alarmAknowledged_ = true;
     			
+    			while ( !vibrateFinished_ || !soundFinished_ )
+    			{
+    				//Wait till threads have finished
+    				//wait(100);
+    				//TODO find some way to save resources here
+    			}
+    			
     			//end this activity
     			finish();
     		}
@@ -65,6 +74,8 @@ public class AcknowledgeActivity extends Activity
 	
     private HorizontalSlider slider_;
     private boolean alarmAknowledged_ = false;
+    private boolean vibrateFinished_ = false;
+    private boolean soundFinished_ = false;
     private PowerManager.WakeLock wakelock_;
     private final Thread vibrateThread_ = new VibrateThread();
     private final Thread musicPlayerThread_ = new MusicPlayerThread();
@@ -87,8 +98,11 @@ public class AcknowledgeActivity extends Activity
 					e.printStackTrace();
 				}
 			}
+			
+			vibrateFinished_ = true;
 
     	}
+    	
     };
     
     class MusicPlayerThread extends Thread 
@@ -111,6 +125,7 @@ public class AcknowledgeActivity extends Activity
 					e.printStackTrace();
 				}
 			}
+			soundFinished_ = true;
 
     	}
     }; 
