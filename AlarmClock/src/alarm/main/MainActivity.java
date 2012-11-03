@@ -69,12 +69,19 @@ public class MainActivity extends Activity
       		  	
       		  	alarmGenerator_.setAlarm(v.getContext(),alarmTime_);
   
+      		  	alarmHourButton_.setEnabled(false);
+      		  	alarmMinuteButton_.setEnabled(false);
+      		  	
       		  	String text = "Alarm set to:" + alarmTime_.getHours() + ":" + alarmTime_.getMinutes();
       		  	Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
     		}
     		else
     		{
       		  	alarmGenerator_.cancelAlarm(v.getContext(),alarmTime_);
+      		  	
+      		  	alarmHourButton_.setEnabled(true);
+      		  	alarmMinuteButton_.setEnabled(true);
+      		  	
       		  	String text = "Alarm:" + alarmTime_.getHours() + ":" + alarmTime_.getMinutes() + " cancelled.";
       		  	Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
     		}
