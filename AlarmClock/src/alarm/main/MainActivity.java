@@ -16,6 +16,7 @@ import android.os.Bundle;
 
 import alarm.main.numberpicker.NumberPicker;
 import alarm.main.AlarmGenerator;
+import utility.StringUtility;
 
 public class MainActivity extends Activity
 {
@@ -72,7 +73,7 @@ public class MainActivity extends Activity
       		  	alarmHourButton_.setEnabled(false);
       		  	alarmMinuteButton_.setEnabled(false);
       		  	
-      		  	String text = "Alarm set to:" + alarmTime_.getHours() + ":" + alarmTime_.getMinutes();
+      		  	String text = "Alarm set to: " + StringUtility.NumberTo2DigitString(alarmTime_.getHours()) + ":" + StringUtility.NumberTo2DigitString(alarmTime_.getMinutes());
       		  	Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
     		}
     		else
@@ -82,7 +83,7 @@ public class MainActivity extends Activity
       		  	alarmHourButton_.setEnabled(true);
       		  	alarmMinuteButton_.setEnabled(true);
       		  	
-      		  	String text = "Alarm:" + alarmTime_.getHours() + ":" + alarmTime_.getMinutes() + " cancelled.";
+      		  	String text = "Alarm: " + StringUtility.NumberTo2DigitString(alarmTime_.getHours()) + ":" + StringUtility.NumberTo2DigitString(alarmTime_.getMinutes()) + " cancelled.";
       		  	Toast.makeText(getApplicationContext(), text,Toast.LENGTH_LONG).show();
     		}
         }

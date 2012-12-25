@@ -36,6 +36,8 @@ import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.widget.EditText;
 
+import utility.StringUtility;
+
 /**
  * This class has been pulled from the Android platform source code, its an internal widget that hasn't been
  * made public so its included in the project in this fashion for use with the preferences screen; I have made
@@ -244,17 +246,24 @@ public class NumberPicker extends LinearLayout implements OnClickListener,
         }
     }
 
-    protected void updateView() {
-
+    protected void updateView()
+    {
+    	int temp;
+    	
         /* If we don't have displayed values then use the
          * current number else find the correct value in the
          * displayed values for the current number.
          */
-        if (mDisplayedValues == null) {
-            mText.setText(formatNumber(mCurrent));
-        } else {
-            mText.setText(mDisplayedValues[mCurrent - mStart]);
+        if (mDisplayedValues == null)
+        {
+        	temp = mCurrent;
         }
+        else
+        {
+        	temp = mCurrent - mStart;
+        }
+    	
+    	mText.setText(StringUtility.NumberTo2DigitString(temp));
         mText.setSelection(mText.getText().length());
     }
 
